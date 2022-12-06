@@ -13,7 +13,7 @@ class ProductPagination(PageNumberPagination):
 class ProductView(viewsets.ModelViewSet):
 
     serializer_class = ProductSerializer
-    queryset = Product.objects.all()
+    queryset = Product.objects.filter(on_sale=True)
     pagination_class = ProductPagination
     permission_classes = [IsAuthenticatedOrReadOnly, ]
     lookup_field = 'slug'

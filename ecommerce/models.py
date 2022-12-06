@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import string
 from random import SystemRandom
 from typing import Any
@@ -38,6 +40,16 @@ class Product(models.Model):
 
         self.slug = slugify(self.name + '-' + str(suffix))
 
-        self.on_sale = False if self.stock == 0 else True
-
         return super().save(*args, **kwargs)
+
+    @staticmethod
+    def stockless(product: Product) -> None:
+        product.on_sale = False
+        product.save()
+
+    def clean(self, *args, **kwargs) -> Any:
+
+        if not getattr(self, 'stock'):
+            self.stockless(self)
+
+        return super().clean(*args, **kwargs)
