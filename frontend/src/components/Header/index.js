@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import { FaHome, FaSignInAlt, FaUserAlt } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import { Header, H1, Nav, Ul } from './styled';
 
 export default function MainHeader() {
@@ -10,19 +11,19 @@ export default function MainHeader() {
       <Nav>
         <Ul>
           <li>
-            <a href="#">
-              <FaHome />
-            </a>
+            <Link to="/">
+              <FaHome size={24} />
+            </Link>
           </li>
           <li>
-            <a href="#">
-              <FaSignInAlt />
-            </a>
+            <Link to="/login">
+              <FaSignInAlt size={24} />
+            </Link>
           </li>
           <li>
-            <a href="#">
-              <FaUserAlt />
-            </a>
+            <Link to="/logout">
+              <FaUserAlt size={24} />
+            </Link>
           </li>
         </Ul>
       </Nav>

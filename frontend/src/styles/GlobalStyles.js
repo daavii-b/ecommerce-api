@@ -31,7 +31,7 @@ export default createGlobalStyle`
   }
 
   a {
-    display: block;
+    color: inherit;
   }
 
 `;
