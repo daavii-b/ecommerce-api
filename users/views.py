@@ -14,6 +14,7 @@ class UserViewSet(ViewSet):
     queryset = User.objects.all()
     lookup_field = 'username'
     permission_classes = (NewUser, IsOwner)
+    http_method_names = ['POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS', ]
 
     def get_user(self, request) -> User:
 
