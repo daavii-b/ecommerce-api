@@ -37,6 +37,20 @@ class UserSerializer(serializers.ModelSerializer):
 
         return super().create(validated_data)
 
+    def update(self, instance, validated_data):
+
+        instance.username = validated_data.get('username', instance.username)
+        instance.email = validated_data.get('email', instance.email)
+
+        password = validated_data.get("password", '')
+
+        instance.password = make_password(password) if \
+            password else instance.password
+
+        instance.save()
+
+        return instance
+
     def validate_username(self, value):
         self._field = 'username'
         if len(value) <= 2:
