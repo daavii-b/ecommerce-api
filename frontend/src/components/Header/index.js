@@ -11,7 +11,7 @@ export default function MainHeader() {
       <Nav>
         <Ul>
           <li>
-            <Link to="/">
+            <Link to="/" state={{ isLoggedIn: true }}>
               <FaHome size={24} />
             </Link>
           </li>

@@ -5,7 +5,7 @@ import { Container } from '../../styles/GlobalStyles';
 export default function Page404() {
   return (
     <Container>
-      <h1>404 - Page not Found</h1> <FaSadCry />
+      <h2>404 - Page not Found</h2> <FaSadCry />
     </Container>
   );
 }
