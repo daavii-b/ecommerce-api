@@ -1,4 +1,5 @@
 import styled, { createGlobalStyle } from 'styled-components';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default createGlobalStyle`
   * {
@@ -34,6 +35,16 @@ export default createGlobalStyle`
     color: inherit;
   }
 
+  body .Toastify .Toastify__toast-container .Toastify__toast--success {
+    background: transparent;
+    color: green;
+  }
+
+  body .Toastify .Toastify__toast-container .Toastify__toast--error {
+    background: transparent;
+    color: red;
+
+  }
 `;
 
 export const Container = styled.section`
