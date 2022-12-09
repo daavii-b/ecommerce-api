@@ -1,3 +1,4 @@
+import { combineReducers } from 'redux';
 import authReducer from './auth/reducer';
 import emailReducer from './email/reducer';
 
@@ -6,7 +7,7 @@ export const initialState = {
   emailReducer: { emailVerified: false },
 };
 
-export default {
+export default combineReducers({
   authReducer,
   emailReducer,
-};
+});
