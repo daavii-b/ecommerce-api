@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission
 
-NEW_USER_SAFE_METHODS = ('GET', 'POST', 'OPTIONS', 'HEAD')
+NEW_USER_SAFE_METHODS = ('POST', 'OPTIONS', 'HEAD')
 
 
 class IsOwner(BasePermission):
@@ -12,6 +12,8 @@ class IsOwner(BasePermission):
 
 
 class NewUser(BasePermission):
-    def has_permission(self, request, view):
-        return request.user.is_authenticated and \
-            request.method not in NEW_USER_SAFE_METHODS
+    def has_object_permission(self, request, view):
+        return not (
+            request.user.is_authenticated and request.method
+            in NEW_USER_SAFE_METHODS
+        )

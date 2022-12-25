@@ -4,7 +4,8 @@ from .views import UserViewSet
 
 urlpatterns = [
     path(
-        r'users', UserViewSet.as_view({
+        r'users/', UserViewSet.as_view({
+            'get': 'retrieve',
             'post': 'create',
             'delete': 'destroy',
             'put': 'update',

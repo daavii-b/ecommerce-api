@@ -13,8 +13,8 @@ class UserViewSet(ViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     lookup_field = 'username'
-    permission_classes = (NewUser, IsOwner)
-    http_method_names = ['POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS', ]
+    permission_classes = (NewUser, IsOwner,)
+    http_method_names = ["get", "post", "put", "patch", "delete", "options"]
 
     def get_user(self, request) -> User:
 
@@ -26,6 +26,13 @@ class UserViewSet(ViewSet):
         self.check_object_permissions(request, user)
 
         return user
+
+    def retrieve(self, request) -> Response:
+        user = get_object_or_404(self.queryset, username=request.user.username)
+
+        serializer = UserSerializer(user)
+
+        return Response(serializer.data)
 
     def create(self, request) -> Response:
         serializer = UserSerializer(data=request.data)
