@@ -18,7 +18,7 @@ class UserViewSet(ViewSet):
 
     def get_user(self, request) -> User:
 
-        user = get_object_or_404(
+        user: User = get_object_or_404(
             self.queryset,
             username=request.user.username
         )
@@ -28,14 +28,16 @@ class UserViewSet(ViewSet):
         return user
 
     def retrieve(self, request) -> Response:
-        user = get_object_or_404(self.queryset, username=request.user.username)
+        user: User = get_object_or_404(
+            self.queryset, username=request.user.username
+        )
 
-        serializer = UserSerializer(user)
+        serializer: UserSerializer = UserSerializer(user)
 
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request) -> Response:
-        serializer = UserSerializer(data=request.data)
+        serializer: UserSerializer = UserSerializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)
 
@@ -44,12 +46,14 @@ class UserViewSet(ViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def partial_update(self, request) -> Response:
-        user = self.get_user(request)
+        user: User = self.get_user(request)
 
-        serializer = UserSerializer(
+        serializer: UserSerializer = UserSerializer(
             partial=True,
             instance=user,
-            data=request.data
+            data=request.data,
+            context={'request': request}
+
         )
 
         serializer.is_valid(raise_exception=True)
@@ -59,11 +63,12 @@ class UserViewSet(ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def update(self, request) -> Response:
-        user = self.get_user(request)
+        user: User = self.get_user(request)
 
-        serializer = UserSerializer(
-            instance=user,
+        serializer: UserSerializer = UserSerializer(
             data=request.data,
+            instance=user,
+            context={'request': request}
         )
 
         serializer.is_valid(raise_exception=True)
@@ -73,7 +78,7 @@ class UserViewSet(ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def destroy(self, request) -> Response:
-        user = self.get_user(request)
+        user: User = self.get_user(request)
 
         user.delete()
 

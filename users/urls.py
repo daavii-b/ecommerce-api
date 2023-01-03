@@ -2,6 +2,8 @@ from django.urls import path
 
 from .views import UserViewSet
 
+app_name: str = 'users'
+
 urlpatterns = [
     path(
         r'users/', UserViewSet.as_view({
