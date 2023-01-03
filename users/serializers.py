@@ -10,9 +10,10 @@ from .validators import EmailValidator
 
 
 class UserSerializer(serializers.ModelSerializer):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args, **kwargs):
         self._errors: Dict[str, List] = defaultdict(list)
         self._field: str
+
         return super().__init__(*args, **kwargs)
 
     class Meta:
@@ -41,6 +42,12 @@ class UserSerializer(serializers.ModelSerializer):
 
         instance.username = validated_data.get('username', instance.username)
         instance.email = validated_data.get('email', instance.email)
+        instance.first_name = validated_data.get(
+            'first_name', instance.first_name
+        )
+        instance.last_name = validated_data.get(
+            'last_name', instance.last_name
+        )
 
         password = validated_data.get("password", '')
 
@@ -51,7 +58,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         return instance
 
-    def validate_username(self, value):
+    def validate_username(self, value) -> str:
         self._field = 'username'
         if len(value) <= 2:
             self._errors[self._field].append(
@@ -62,7 +69,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         return value
 
-    def validate_email(self, value):
+    def validate_email(self, value) -> str:
         self._field = 'email'
         if not EmailValidator(value).is_valid():
             self._errors[self._field].append(

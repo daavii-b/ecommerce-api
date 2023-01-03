@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import string
 from random import SystemRandom
-from typing import Any
+from typing import Any, List
 from uuid import uuid4
 
 from django.conf import settings
@@ -49,35 +49,35 @@ class Product(models.Model):
         self.name = self.name.capitalize()
 
         random = SystemRandom()
-        suffix = random.choices(
+        suffix: List[str] = random.choices(
             string.ascii_letters + string.digits, k=4
         )
 
         self.slug = slugify(self.name + '-' + str(suffix))
 
         save = super().save(*args, **kwargs)
+
         if self.cover:
-            try:
-                self.cover = self.resize_image(self.cover)
-            except FileNotFoundError:
-                ...
+            self.cover = self.resize_image(self.cover)
 
         return save
 
     @staticmethod
-    def resize_image(image, width=300):
+    def resize_image(image: Any, width: int = 300):
         image_full_path = os.path.join(settings.MEDIA_ROOT, image.name)
         image_pillow = Image.open(image_full_path)
 
-        original_width, original_height = image_pillow.size
+        original_width, _ = image_pillow.size
 
         if original_width == width:
             image_pillow.close()
             return
 
-        height = width
+        height: int = width
 
-        new_image = image_pillow.resize((width, height), Image.LANCZOS)
+        new_image = image_pillow.resize(
+            (width, height), Image.Resampling.LANCZOS
+        )
 
         new_image.save(
             image_full_path,
@@ -92,9 +92,8 @@ class Product(models.Model):
         product.on_sale = False
         product.save()
 
-    def clean(self, *args, **kwargs) -> Any:
+    def clean(self, *args, **kwargs) -> None:
 
-        if not getattr(self, 'stock'):
-            self.stockless(self)
+        self.stockless(self) if not getattr(self, 'stock') else ...
 
         return super().clean(*args, **kwargs)
