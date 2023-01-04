@@ -1,4 +1,3 @@
 # DJANGO - API - WITH - REACT
 
-
- ***THIS IS ONLY PROJECT BASE***
+## This repo contain only API code.
