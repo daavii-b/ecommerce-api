@@ -1,3 +1,3 @@
 # DJANGO - API - WITH - REACT
 
-## This repo contain only API code.
+## This repo contain only the API code.
