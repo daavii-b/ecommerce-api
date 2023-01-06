@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import string
 from random import SystemRandom
-from typing import Any, List
+from typing import Any, List, Tuple
 from uuid import uuid4
 
 from django.conf import settings
@@ -56,24 +56,20 @@ class Product(models.Model):
         self.slug = slugify(self.name + '-' + str(suffix))
 
         save = super().save(*args, **kwargs)
-
         if self.cover:
             self.cover = self.resize_image(self.cover)
-
-        return save
+            return save
 
     @staticmethod
-    def resize_image(image: Any, width: int = 300):
+    def resize_image(image: Any, width: int = 300, height: int = 300):
         image_full_path = os.path.join(settings.MEDIA_ROOT, image.name)
+
         image_pillow = Image.open(image_full_path)
 
-        original_width, _ = image_pillow.size
+        original_image_size: Tuple[int, int] = image_pillow.size
 
-        if original_width == width:
-            image_pillow.close()
-            return
-
-        height: int = width
+        if original_image_size == (width, height):
+            return image_pillow.close()
 
         new_image = image_pillow.resize(
             (width, height), Image.Resampling.LANCZOS
