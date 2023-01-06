@@ -6,6 +6,6 @@ app_name: str = 'eccomerce'
 
 router = DefaultRouter()
 
-router.register(r'products/', ProductView, 'product')
+router.register(r'products', ProductView, 'product')
 
 urlpatterns = router.urls
