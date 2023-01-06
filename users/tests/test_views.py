@@ -1,23 +1,17 @@
-from typing import Any, Dict
-
 from django.http import HttpResponse
 
-from .test_user_base import UserBaseTestCase
+from .test_base import UserBaseTestCase
 
 
 class UserViewTestCase(UserBaseTestCase):
 
     def test_if_new_user_can_create_an_account(self) -> None:
-        user_data: dict = self.get_user_data()
-
-        response: HttpResponse = self.make_new_user(**user_data)
+        response: HttpResponse = self.make_new_user()
 
         self.assertEqual(response.status_code, 201)
 
-    def test_if_new_user_get_your_data_without_access_token_returns_404(self) -> None:  # noqa: E501
-        user_data: Dict[str, str] = self.get_user_data()
-
-        self.make_new_user(**user_data)
+    def test_if_new_user_try_to_get_your_data_without_access_token_returns_404(self) -> None:  # noqa: E501
+        self.make_new_user()
 
         response: HttpResponse = self.client.get(self.url)
 
@@ -32,13 +26,12 @@ class UserViewTestCase(UserBaseTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_if_a_new_user_can_get_an_access_token(self) -> None:
-        user_data: Dict[str, Any] = self.get_user_data()
 
-        self.make_new_user(**user_data)
+        self.make_new_user()
 
         response_token: HttpResponse = self.get_user_token(
-            email=user_data['email'],
-            password=user_data['password']
+            email=self.user_data['email'],
+            password=self.user_data['password']
         )
 
         self.assertEqual(response_token.status_code, 200)
@@ -49,7 +42,7 @@ class UserViewTestCase(UserBaseTestCase):
         }
         response: HttpResponse = self.client.put(
             self.url, data=new_user_data,
-            content_type='application/json'
+            content_type=self.content_type
         )
 
         self.assertEqual(response.status_code, 404)
@@ -62,7 +55,7 @@ class UserViewTestCase(UserBaseTestCase):
         }
         response: HttpResponse = self.client.patch(
             self.url, data=new_user_data, HTTP_AUTHORIZATION=self.auth_token,
-            content_type='application/json'
+            content_type=self.content_type
         )
 
         self.assertEqual(response.status_code, 200)
@@ -79,17 +72,16 @@ class UserViewTestCase(UserBaseTestCase):
         }
         response: HttpResponse = self.client.put(
             self.url, data=new_user_data, HTTP_AUTHORIZATION=self.auth_token,
-            content_type='application/json'
+            content_type=self.content_type
         )
         new_user_data.pop('password')
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), new_user_data)
+        self.assertDictEqual(response.json(), new_user_data)
 
     def test_if_do_not_logged_user_try_to_delete_returns_404(self) -> None:
-        user_data = self.get_user_data()
 
-        self.make_new_user(**user_data)
+        self.make_new_user()
 
         response = self.client.delete(self.url)
 

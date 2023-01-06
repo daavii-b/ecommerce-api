@@ -10,18 +10,23 @@ class UserBaseTestCase(TestCase):
         self.auth_token = 'Bearer '
         self.url: str = reverse('users:users')
         self.token_url: str = reverse('token_obtain_pair')
+        self.content_type = 'application/json'
         super().__init__(*args, **kwargs)
+
+    def setUp(self) -> None:
+        self.user_data: dict = self.get_user_data()
+        return super().setUp()
 
     def make_new_user(
         self,
-        username: str,
-        email: str,
-        password: str,
+        username: str = '',
+        email: str = '',
+        password: str = '',
     ) -> HttpResponse:
         return self.client.post(self.url, data={
-            'email': email,
-            'password': password,
-            'username': username,
+            'email': email or self.user_data['email'],
+            'password': password or self.user_data['password'],
+            'username': username or self.user_data['username'],
         })
 
     def get_user_token(
@@ -37,8 +42,8 @@ class UserBaseTestCase(TestCase):
     @ staticmethod
     def get_user_data() -> Dict[str, str]:
         return {
-            'email': 'britodavi122@gmail.com',
-            'username': 'myusername',
+            'email': 'defaultEmail@example.com',
+            'username': 'defaultUsername',
             'password': '23444',
         }
 

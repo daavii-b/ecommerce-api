@@ -3,7 +3,7 @@ from typing import Dict
 from rest_framework import serializers
 
 from ..serializers import UserSerializer
-from .test_user_base import UserBaseTestCase
+from .test_base import UserBaseTestCase
 
 
 class UserSerializerTestCase(UserBaseTestCase):
