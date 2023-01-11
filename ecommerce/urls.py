@@ -2,7 +2,7 @@ from rest_framework.routers import DefaultRouter
 
 from .views import ProductView
 
-app_name: str = 'eccomerce'
+app_name: str = 'ecommerce'
 
 router = DefaultRouter()
 

@@ -1,12 +1,17 @@
 from django.urls import path
 
-from .views import UserViewSet
+from . import views
 
 app_name: str = 'users'
 
+
 urlpatterns = [
     path(
-        r'users/', UserViewSet.as_view({
+        r'users/confirm_email/<uuid>/<token>',
+        views.confirm_email, name='email'
+    ),
+    path(
+        r'users/', views.UserViewSet.as_view({
             'get': 'retrieve',
             'post': 'create',
             'delete': 'destroy',

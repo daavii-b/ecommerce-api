@@ -5,12 +5,13 @@ from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
+from validators import EmailValidator
+
 from .models import User
-from .validators import EmailValidator
 
 
 class UserSerializer(serializers.ModelSerializer):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self._errors: Dict[str, List] = defaultdict(list)
         self._field: str
 
@@ -18,7 +19,9 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'password']
+        fields: list[str] = [
+            'username', 'first_name', 'last_name', 'email', 'password'
+        ]
 
     username = serializers.CharField(
         validators=[UniqueValidator(queryset=User.objects.all())]

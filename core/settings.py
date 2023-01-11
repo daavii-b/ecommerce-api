@@ -29,10 +29,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "INSECURE")
+SECRET_KEY: str = os.environ.get("DJANGO_SECRET_KEY", "INSECURE")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if os.environ.get('DEBUG') == '1' else False
+DEBUG: bool = True if os.environ.get('DEBUG') == '1' else False
 
 ALLOWED_HOSTS: List = [
     '192.168.0.20',
@@ -139,7 +139,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ORIGIN_WHITELIST = [
+CORS_ORIGIN_WHITELIST: list[str] = [
     'http://localhost:3000',
     'http://192.168.0.20:3000',
 ]
@@ -167,5 +167,27 @@ SIMPLE_JWT = {
 }
 # Media
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media/'
+MEDIA_URL: str = 'media/'
+MEDIA_ROOT: Path = BASE_DIR / 'media/'
+
+# SMTP
+
+# DEFAULT_BACKEND
+EMAIL_BACKEND: str | None = os.environ.get('EMAIL_BACKEND')
+# Email sender
+DEFAULT_FROM_EMAIL: str = 'britodavi122@gmail.com'
+# Client Host for send emails
+EMAIL_HOST: str | None = os.environ.get('EMAIL_HOST')
+# TLS Port
+EMAIL_PORT: str | None = os.environ.get('EMAIL_PORT')
+# Use TLS
+EMAIL_USE_TLS: str | None = os.environ.get('EMAIL_USE_TLS')
+# Email to send email
+EMAIL_HOST_USER: str | None = os.environ.get('EMAIL_HOST_USER')
+# Email Password
+EMAIL_HOST_PASSWORD: str | None = os.environ.get('EMAIL_HOST_PASSWORD')
+
+
+# Default Password Reset Timeout
+
+PASSWORD_RESET_TIMEOUT: float = 60 * 30

@@ -9,6 +9,13 @@ class User(AbstractUser):
                           unique=True, primary_key=True)
     email = models.EmailField('E-mail', unique=True)
 
+    is_active = models.BooleanField(
+        "active",
+        default=False,
+        help_text="Designates whether this user should be treated as active. "
+        "Unselect this instead of deleting accounts.",
+    )
+
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
