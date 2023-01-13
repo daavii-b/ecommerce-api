@@ -1,36 +1,23 @@
 from typing import Any
 
-from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpRequest
-from django.shortcuts import get_object_or_404, redirect
-from django.template.loader import render_to_string
-from django.utils.encoding import DjangoUnicodeDecodeError, force_bytes
-from django.utils.encoding import force_str as force_text
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.shortcuts import get_object_or_404
 from rest_framework import status
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.exceptions import AuthenticationFailed, NotFound
+from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
-from utils import token_email_generator
+from utils.coders import Coders
+from utils.render import renders
+from utils.tokens import token_email_generator
 
 from .models import User
 from .permissions import IsOwner, NewUser
 from .serializers import UserSerializer
 from .services.email import UserEmailService
-
-
-def confirm_email(request: HttpRequest, uuid: str, token: str):
-    try:
-        user_id: Any = force_text(urlsafe_base64_decode(uuid))
-        user: User = User.objects.get(pk=user_id)
-
-        if user and token_email_generator.check_token(user, token):
-            user.is_active = True
-            user.save()
-        return redirect('ecommerce:product-list')
-    except (ObjectDoesNotExist, DjangoUnicodeDecodeError):
-        return redirect('ecommerce:product-list')
 
 
 class UserViewSet(ViewSet):
@@ -42,18 +29,10 @@ class UserViewSet(ViewSet):
     http_method_names: list[str] = [
         "get", "post", "put", "patch", "delete", "options"
     ]
+    coder = Coders()
 
     def get_email_service(self, request, user) -> UserEmailService:
-        current_site = get_current_site(request)
-        html_message: str = render_to_string(
-            'email/confirm_email.html',
-            {
-                'user': user,
-                'domain': current_site,
-                'uuid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': token_email_generator.make_token(user)
-            }
-        )
+        html_message: str = renders.email_render(request, user)
         return UserEmailService(
             'This a subject for testing purposes',
             [user.email],
@@ -131,3 +110,28 @@ class UserViewSet(ViewSet):
         user.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(('GET',))
+@renderer_classes((JSONRenderer,))
+def confirm_email(request: HttpRequest, uuid: str, token: str):
+    try:
+        user_id: Any = UserViewSet.coder.decode(uuid)
+        user: User = User.objects.get(pk=user_id)
+
+        if token_email_generator.check_token(user, token):
+            user.is_active = True
+            user.save()
+
+            return Response(status.HTTP_200_OK)
+        else:
+            raise AuthenticationFailed(
+                detail='Your link to confirm your email address is invalid.',
+                code=status.HTTP_401_UNAUTHORIZED,
+            )
+
+    except (ObjectDoesNotExist):
+        raise NotFound(
+            'User does not exist',
+            status.HTTP_404_NOT_FOUND
+        )

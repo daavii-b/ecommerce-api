@@ -148,6 +148,7 @@ CORS_ORIGIN_WHITELIST: list[str] = [
 AUTH_USER_MODEL = 'users.User'
 
 REST_FRAMEWORK = {
+    'PAGE_SIZE': os.environ.get('PAGE_SIZE') or 12,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),

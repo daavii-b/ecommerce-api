@@ -56,23 +56,23 @@ class UserEmailService(IEmailService):
 
     @subject.setter
     def subject(self, value: str) -> None:
-        self._subject = value
+        self._subject: str = value
 
     @message.setter
     def message(self, value: str) -> None:
-        self._message = value
+        self._message: str = value
 
     @recipient_list.setter
     def recipient_list(self, value: List[str]) -> None:
-        self._recipient_list = value
+        self._recipient_list: List[str] = value
 
     @fail_silently.setter
     def fail_silently(self, value: bool) -> None:
-        self._fail_silently = value
+        self._fail_silently: bool = value
 
     @html_message.setter
     def html_message(self, value: str) -> None:
-        self._html_message = value
+        self._html_message: str = value
 
     @connection.setter
     def connection(self, value: Any) -> None:

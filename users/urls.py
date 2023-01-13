@@ -8,7 +8,7 @@ app_name: str = 'users'
 urlpatterns = [
     path(
         r'users/confirm_email/<uuid>/<token>',
-        views.confirm_email, name='email'
+        views.confirm_email, name='confirm_email'
     ),
     path(
         r'users/', views.UserViewSet.as_view({
