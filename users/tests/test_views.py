@@ -1,5 +1,11 @@
-from django.http import HttpResponse
+from uuid import uuid4
 
+from django.http import HttpResponse
+from django.urls import reverse
+
+from utils.tokens import token_email_generator
+
+from ..models import User
 from .test_base import UserBaseTestCase
 
 
@@ -10,8 +16,55 @@ class UserViewTestCase(UserBaseTestCase):
 
         self.assertEqual(response.status_code, 201)
 
+    def test_if_user_cannot_make_login_without_confirm_your_email(self) -> None:  # noqa: E501
+
+        self.make_new_user(**self.user_data)
+
+        response_token = self.get_user_token(
+            self.user_data['email'], self.user_data['password']
+        )
+        self.assertEqual(response_token.status_code, 401)
+
+    def test_if_user_token_is_not_valid_raises_401_unauthorized(self) -> None:
+        user = self.make_new_user().json()
+        user_object: User | None = self.get_user_object(user['email'])
+        other_user_object: User = self.make_user_object()
+        user_token: str = token_email_generator.make_token(other_user_object)
+
+        confirm_email_url = reverse('users:confirm_email', args=(
+            self.encode_data(user_object.pk), user_token  # type: ignore
+        ))
+
+        expected_error_message: str = 'Your link to confirm your email address is invalid.'  # noqa: E501
+
+        response: HttpResponse = self.client.get(
+            confirm_email_url, follow=True
+        )
+        self.assertEqual(response.status_code, 401)
+        self.assertIn(expected_error_message, response.content.decode('utf-8'))
+
+    def test_if_user_do_not_exists_raises_not_found(self) -> None:
+        user = self.make_new_user().json()
+        user_object: User | None = self.get_user_object(user['email'])
+        user_token: str = token_email_generator.make_token(
+            user_object  # type: ignore
+        )
+        confirm_email_url = reverse('users:confirm_email', args=(
+            self.encode_data(uuid4()), user_token
+        ))
+
+        expected_error_message: str = 'User does not exist'
+
+        response: HttpResponse = self.client.get(
+            confirm_email_url, follow=True
+        )
+
+        self.assertEqual(response.status_code, 404)
+        self.assertIn(expected_error_message, response.content.decode('utf-8'))
+
     def test_if_new_user_try_to_get_your_data_without_access_token_returns_404(self) -> None:  # noqa: E501
-        self.make_new_user()
+        user = self.make_new_user().json()
+        self.confirm_email(user['email'])
 
         response: HttpResponse = self.client.get(self.url)
 
@@ -27,7 +80,9 @@ class UserViewTestCase(UserBaseTestCase):
 
     def test_if_a_new_user_can_get_an_access_token(self) -> None:
 
-        self.make_new_user()
+        user = self.make_new_user().json()
+
+        self.confirm_email(user['email'])
 
         response_token: HttpResponse = self.get_user_token(
             email=self.user_data['email'],
