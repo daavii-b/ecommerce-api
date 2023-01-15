@@ -1,5 +1,6 @@
 from typing import Any
 
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
@@ -10,14 +11,13 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
+from users.tasks import send_email_task
 from utils.coders import Coders
-from utils.render import renders
 from utils.tokens import token_email_generator
 
 from .models import User
 from .permissions import IsOwner, NewUser
 from .serializers import UserSerializer
-from .services.email import UserEmailService
 
 
 class UserViewSet(ViewSet):
@@ -30,14 +30,6 @@ class UserViewSet(ViewSet):
         "get", "post", "put", "patch", "delete", "options"
     ]
     coder = Coders()
-
-    def get_email_service(self, request, user) -> UserEmailService:
-        html_message: str = renders.email_render(request, user)
-        return UserEmailService(
-            'This a subject for testing purposes',
-            [user.email],
-            html_message=html_message,
-        )
 
     def get_user(self, request) -> User:
 
@@ -65,11 +57,10 @@ class UserViewSet(ViewSet):
 
         serializer.save()
 
-        email_service: UserEmailService = self.get_email_service(
-            request, serializer.instance
-        )
-
-        email_service.send_email()
+        send_email_task.delay(
+            domain=str(get_current_site(request)),
+            user_email=serializer.data['email'],
+        )  # type: ignore
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

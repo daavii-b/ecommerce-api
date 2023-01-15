@@ -22,7 +22,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields: list[str] = [
             'username', 'first_name', 'last_name', 'email', 'password'
         ]
-
     username = serializers.CharField(
         validators=[UniqueValidator(queryset=User.objects.all())]
     )

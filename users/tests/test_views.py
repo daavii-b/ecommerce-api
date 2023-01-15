@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from django.http import HttpResponse
+from django.test import override_settings
 from django.urls import reverse
 
 from utils.tokens import token_email_generator
@@ -9,6 +10,10 @@ from ..models import User
 from .test_base import UserBaseTestCase
 
 
+@override_settings(
+    CELERY_TASK_ALWAYS_EAGER=True,
+    CELERY_TASK_STORE_EAGER_RESULT=True,
+)
 class UserViewTestCase(UserBaseTestCase):
 
     def test_if_new_user_can_create_an_account(self) -> None:
@@ -130,6 +135,7 @@ class UserViewTestCase(UserBaseTestCase):
             content_type=self.content_type
         )
         new_user_data.pop('password')
+        response.json()
 
         self.assertEqual(response.status_code, 200)
         self.assertDictEqual(response.json(), new_user_data)

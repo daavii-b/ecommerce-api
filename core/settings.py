@@ -133,11 +133,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'staticfiles',
-]
-STATIC_ROOT = 'static'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -197,3 +192,6 @@ EMAIL_HOST_PASSWORD: str | None = os.environ.get('EMAIL_HOST_PASSWORD')
 # Default Password Reset Timeout
 
 PASSWORD_RESET_TIMEOUT: float = 60 * 30
+
+
+# CELERY CONFS

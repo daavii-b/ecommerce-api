@@ -1,7 +1,7 @@
-from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.urls import reverse
 
+from users.models import User
 from utils.coders import Coders
 from utils.tokens import token_email_generator
 
@@ -18,15 +18,13 @@ class Renders:
         ))
 
     @classmethod
-    def email_render(cls, request, user) -> str:
-        url: str = cls.get_user_email_url(user)
-
+    def email_render(cls, domain, user: User) -> str:
         return render_to_string(
             'email/confirm_email.html',
             {
                 'user': user,
-                'domain': get_current_site(request),
-                'url': url,
+                'domain': domain,
+                'url': cls.get_user_email_url(user)
             }
         )
 
