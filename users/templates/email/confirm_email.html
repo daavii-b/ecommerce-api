@@ -4,19 +4,143 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/solid.min.css" integrity="sha512-6mc0R607di/biCutMUtU9K7NtNewiGQzrvWX4bWTeqmljZdJrwYvKJtnhgR+Ryvj+NRJ8+NnnCM/biGqMe/iRA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <title>Confirm your E-mail</title>
+
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            outline: none;
+            border: none;
+            text-decoration: none;
+        }
+
+        html {
+            font-size: 62.5%;
+        }
+
+        body {
+            width: 100%;
+            font-size: 1.6rem;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        a {
+            cursor: pointer;
+        }
+
+
+        .main-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 5rem;
+            background-color: #39ED75;
+        }
+
+        .header-title {
+            font-size: 2rem;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .main-content {
+            width: 70vh;
+            margin: 4rem auto;
+            padding: .6rem;
+        }
+
+        .help-text {
+            text-align: center;
+            font-size: 1.7rem;
+            margin-bottom: 1rem;
+            padding: .5rem;
+        }
+
+        .main-content a {
+            font-size: 1.7rem;
+            display: block;
+            padding: 1rem;
+            cursor: pointer;
+            background-color: #42FF65;
+            color: black;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+            border-radius: 3rem;
+            box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);
+            transition: .4s ease-in;
+        }
+
+        .main-content a:hover {
+            color: #B30059;
+            transition: .4s ease-out;
+        }
+
+        .main-footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 1.6rem;
+            height: 10rem;
+            padding: .3rem;
+            border-bottom: 1px solid black;
+        }
+
+        .main-footer address {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: .4s ease-in;
+        }
+
+        .main-footer a:hover {
+            transition: .4s ease-in;
+            color: #B30059;
+        }
+
+        .main-footer a {
+            displlay: block;
+            padding: .6rem;
+            font-size: 1.1em;
+            color: black;
+        }
+
+    </style>
+
 </head>
 <body>
-    <header>
-        <h1>
+    <header class="main-header">
+        <h1 class='header-title'>
             Olá, {{user.username}}!
         </h1>
 
-        <main>
-            <p>
-                <a href="{{domain}}{{url}}">Confirm E-mail</a>
-            </p>
-        </main>
     </header>
+    <main class='main-content'>
+        <p class="help-text">Click on the link below to confirm your email.</p>
+
+        <p class="email-action">
+            <a href="http://{{domain}}{{url}}" rel="next" target="_blank">Confirm E-mail</a>
+        </p>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; Davi Brito</p>
+        <address>
+            <a href="mailto: britodavi122@gmail.com" rel="author" target="_blank"><i class="fa-solid fa-envelope"></i></a>
+            <a href="https://instagram.com/daavii_b" rel="author" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://linkedin.com/in/daaviib" rel="author" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+        </address>
+    </footer>
 </body>
 </html>
