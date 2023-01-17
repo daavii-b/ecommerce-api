@@ -11,6 +11,9 @@ urlpatterns = [
         views.confirm_email, name='confirm_email'
     ),
     path(
+        r'users/resend/confirm_email/<username>',
+        views.resend_confirmation_email, name="resend_confirmation_email"),
+    path(
         r'users/', views.UserViewSet.as_view({
             'get': 'retrieve',
             'post': 'create',

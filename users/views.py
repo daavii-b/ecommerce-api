@@ -105,7 +105,7 @@ class UserViewSet(ViewSet):
 
 @api_view(('GET',))
 @renderer_classes((JSONRenderer,))
-def confirm_email(request: HttpRequest, uuid: str, token: str):
+def confirm_email(request: HttpRequest, uuid: str, token: str) -> Response:
     try:
         user_id: Any = UserViewSet.coder.decode(uuid)
         user: User = User.objects.get(pk=user_id)
@@ -124,5 +124,23 @@ def confirm_email(request: HttpRequest, uuid: str, token: str):
     except (ObjectDoesNotExist):
         raise NotFound(
             'User does not exist',
-            status.HTTP_404_NOT_FOUND
+            code=status.HTTP_404_NOT_FOUND
         )
+
+
+@api_view(('GET',))
+@renderer_classes((JSONRenderer,))
+def resend_confirmation_email(request, username) -> Response:
+    try:
+        user = User.objects.get(
+            username__exact=username
+        )
+
+        send_email_task.delay(
+            domain=str(get_current_site(request)),
+            user_email=user.email,
+        )  # type: ignore
+
+        return Response(status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)

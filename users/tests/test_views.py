@@ -30,6 +30,29 @@ class UserViewTestCase(UserBaseTestCase):
         )
         self.assertEqual(response_token.status_code, 401)
 
+    def test_if_user_can_resend_the_email_to_confirmation(self) -> None:
+        user: User = self.make_user_object(email='test@example.com')
+
+        url: str = reverse('users:resend_confirmation_email', kwargs={
+            'username': user.username,
+        })
+
+        response = self.client.get(url)
+
+        self.confirm_email(user.email)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_if_user_that_not_exists_resend_the_email_to_confirmation_returns_404(self) -> None:  # noqa: E501
+
+        url: str = reverse('users:resend_confirmation_email', kwargs={
+            'username': 'UserDoNotExist',
+        })
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 404)
+
     def test_if_user_token_is_not_valid_raises_401_unauthorized(self) -> None:
         user = self.make_new_user().json()
         user_object: User | None = self.get_user_object(user['email'])
