@@ -41,7 +41,7 @@ ALLOWED_HOSTS: List = [
 ]
 
 # Application definition
-INSTALLED_APPS = [
+INSTALLED_APPS: list[str] = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,9 +53,10 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'users',
     'ecommerce',
+    'payments',
 ]
 
-MIDDLEWARE = [
+MIDDLEWARE: list[str] = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
