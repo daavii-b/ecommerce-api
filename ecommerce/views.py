@@ -1,4 +1,3 @@
-
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
@@ -11,4 +10,5 @@ class ProductView(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.filter(on_sale=True)
     permission_classes = [IsAuthenticatedOrReadOnly, ]
-    lookup_field = 'slug'
+    lookup_field: str = 'slug'
+    http_method_names = ['get', 'post']

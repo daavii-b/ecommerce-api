@@ -29,7 +29,7 @@ class UserViewSet(ViewSet):
     http_method_names: list[str] = [
         "get", "post", "put", "patch", "delete", "options"
     ]
-    coder = Coders()
+    coder: Coders = Coders()
 
     def get_user(self, request) -> User:
 
@@ -130,9 +130,9 @@ def confirm_email(request: HttpRequest, uuid: str, token: str) -> Response:
 
 @api_view(('GET',))
 @renderer_classes((JSONRenderer,))
-def resend_confirmation_email(request, username) -> Response:
+def resend_confirmation_email(request: HttpRequest, username: str) -> Response:
     try:
-        user = User.objects.get(
+        user: User = User.objects.get(
             username__exact=username
         )
 

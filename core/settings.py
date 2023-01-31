@@ -36,7 +36,6 @@ DEBUG: bool = True if os.environ.get('DEBUG') == '1' else False
 
 ALLOWED_HOSTS: List = [
     '192.168.0.20',
-    'localhost',
     '127.0.0.1'
 ]
 
@@ -54,6 +53,7 @@ INSTALLED_APPS: list[str] = [
     'users',
     'ecommerce',
     'payments',
+    'cart',
 ]
 
 MIDDLEWARE: list[str] = [
@@ -148,6 +148,8 @@ CORS_ORIGIN_WHITELIST: list[str] = [
 
 AUTH_USER_MODEL = 'users.User'
 
+# REST CONFIGS
+
 REST_FRAMEWORK = {
     'PAGE_SIZE': os.environ.get('PAGE_SIZE') or 12,
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -159,15 +161,18 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination'  # noqa: E501
 }
 
+# JWT CONFIGS
+
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=20),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=4),
+    'REFRESH_TOKEN_LIFETIME': timedelta(hours=16),
     'BLACKLIST_AFTER_ROTATION': False,
 
     'SIGNING_KEY': os.environ.get('JWT_SECRET_KEY'),
 
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
 # Media
 
 MEDIA_URL: str = 'media/'
@@ -195,9 +200,19 @@ EMAIL_HOST_PASSWORD: str | None = os.environ.get('EMAIL_HOST_PASSWORD')
 
 PASSWORD_RESET_TIMEOUT: float = 60 * 30
 
+# CACHE
 
-# STRIPE CONFS
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.environ.get('REDIS_CACHE_LOCATION'),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+        "TIMEOUT": 60 * 5,
+        "KEY_PREFIX": '',
+    }
+}
 
-STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
-STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY')
-STRIPE_WEBHOOK_SECRET = ""
+SESSION_ENGINE: str = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS: str = "default"

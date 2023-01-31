@@ -13,6 +13,6 @@ def delete_cover(instance: Product) -> None:
         pass
 
 
-@ receiver(pre_delete, sender=Product)
+@receiver(pre_delete, sender=Product)
 def product_cover_delete(sender, instance, *args, **kwargs) -> None:
     return delete_cover(instance)
