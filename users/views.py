@@ -1,7 +1,6 @@
 from typing import Any
 
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
 from rest_framework import status
@@ -121,7 +120,7 @@ def confirm_email(request: HttpRequest, uuid: str, token: str) -> Response:
                 code=status.HTTP_401_UNAUTHORIZED,
             )
 
-    except (ObjectDoesNotExist):
+    except User.DoesNotExist:
         raise NotFound(
             'User does not exist',
             code=status.HTTP_404_NOT_FOUND
