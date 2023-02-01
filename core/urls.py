@@ -25,6 +25,7 @@ urlpatterns = [
     path('api/', include('ecommerce.urls')),
     path('api/', include('users.urls')),
     path('api/', include('payments.urls')),
+    path('api/', include('cart.urls')),
     path(
         'api/tokens/', TokenObtainPairView.as_view(),
         name='token_obtain_pair'
