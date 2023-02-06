@@ -1,5 +1,5 @@
 # from datetime import timedelta
-from typing import Any, Type
+from typing import Any, Dict, Type
 
 from django.core.cache import cache
 from rest_framework import status
@@ -26,7 +26,7 @@ class CartView(ViewSet):
     def get_request_data(request) -> list:
         # Return an list with data from the request or an Empty list
         try:
-            return request.data['productsCart']
+            return request.data.values()
         except KeyError:
             return []
 
@@ -36,19 +36,17 @@ class CartView(ViewSet):
 
         if cache.get(user_id):
             return Response({
-                "cart": cache.get(user_id),
+                **cache.get(user_id),
             }, status=status.HTTP_200_OK)
 
         return Response({
-            "cart": []
+            "products_cart": [],
+            "cart_amount": 0,
         }, status=status.HTTP_204_NO_CONTENT)
 
     def create(self, request) -> Response:
 
         # self.create_temporary_user_in_cache(request)
-
-        # Define the key prefix
-        cache.key_prefix = "cart"
 
         # Redis to work with json
         user_id: Any | str = getattr(
@@ -57,28 +55,39 @@ class CartView(ViewSet):
         )
 
         # cache is the default cache backend, work with string.
-        user_cart: Any = cache.get(user_id, None)
+        user_cart: Dict = cache.get(user_id, None)
 
         # cart data sended from client-side
-        data: list = self.get_request_data(request)
+        products_cart, cart_amount = self.get_request_data(request)
 
         # Create a new user cart if not already exists
         if user_cart is None:
-            cache.set(user_id, data, timeout=None)
+            # Define the key prefix
+            cache.key_prefix = "cart"
+            cache.set(user_id, {
+                "products_cart": products_cart,
+                "cart_amount": cart_amount
+            }, timeout=None)
+
         else:
             # verify if have new product in the cart data
-            if user_cart == data:
+            if user_cart == products_cart:
                 return Response(data={
-                    'cart': user_cart,
+                    **user_cart
                 })
             else:
-                if not data:
+                if not products_cart:
                     # if products cart is empty, delete cached data
                     cache.delete(user_id)
                 else:
                     # setting the new data in cache
-                    cache.set(user_id, data, timeout=None)
+                    cache.set(user_id, {
+                        "products_cart": products_cart,
+                        "cart_amount": cart_amount
+                    }, timeout=None)
+
+        user_cart = cache.get(user_id, {})
 
         return Response(data={
-            'cart': cache.get(user_id) or [],
+            **user_cart,
         }, status=status.HTTP_200_OK)
