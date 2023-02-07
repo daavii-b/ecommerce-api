@@ -46,7 +46,6 @@ class Product(models.Model):
         return f'{self.name}'
 
     def save(self, *args, **kwargs) -> Any:
-        self.name = self.name.capitalize()
 
         random = SystemRandom()
         suffix: List[str] = random.choices(

@@ -50,6 +50,7 @@ INSTALLED_APPS: list[str] = [
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt',
+    'django_filters',
     'users',
     'ecommerce',
     'payments',
@@ -157,6 +158,9 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination'  # noqa: E501
 }
