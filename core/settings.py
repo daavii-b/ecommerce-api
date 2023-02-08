@@ -51,6 +51,7 @@ INSTALLED_APPS: list[str] = [
     'corsheaders',
     'rest_framework_simplejwt',
     'django_filters',
+    'django_summernote',
     'users',
     'ecommerce',
     'payments',

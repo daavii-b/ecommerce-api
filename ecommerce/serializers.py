@@ -7,10 +7,10 @@ from .models import Product
 
 class ProductSerializer(serializers.ModelSerializer):
 
-    def __init__(self, instance=None, data=..., **kwargs) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         self._errors: defaultdict[str, list] = defaultdict(list)
         self._field: str = ''
-        super().__init__(instance, data, **kwargs)
+        return super().__init__(*args, **kwargs)
 
     class Meta:
         model = Product
