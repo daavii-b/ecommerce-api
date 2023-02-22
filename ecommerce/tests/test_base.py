@@ -4,6 +4,7 @@ from typing import Any, Dict, Tuple
 
 from django.conf import settings
 from django.test import TestCase
+from django.urls import reverse
 from PIL import Image
 
 from ..models import Product
@@ -12,6 +13,11 @@ MEDIA_ROOT: str = os.path.join(settings.MEDIA_ROOT, 'tests/images/')
 
 
 class ProductBaseTestCase(TestCase):
+
+    def __init__(self, methodName: str = "runTest") -> None:
+        self.products_url: str = reverse('ecommerce:products-list')
+
+        return super().__init__(methodName)
 
     def setUp(self) -> None:
         try:
@@ -104,6 +110,26 @@ class ProductBaseTestCase(TestCase):
             cover=cover
         )
 
+    def make_product_batch(self, quantity: int = 10) -> None:
+        for index in range(quantity):
+            name: str = f'My Produc {index}'
+            description: str = 'Something about my product'
+            stock: int = 12
+            price: float = 12.2
+            promotional_price: float = 12.1
+            on_sale: bool = True
+            cover: str = ''
+
+            Product.objects.create(
+                name=name,
+                description=description,
+                stock=stock,
+                price=price,
+                promotional_price=promotional_price,
+                on_sale=on_sale,
+                cover=cover
+            )
+
     @staticmethod
     def get_image_full_path(image_name: str) -> str:
         """Return an Image full path"""
@@ -128,3 +154,10 @@ class ProductBaseTestCase(TestCase):
             'on_sale': True,
             'cover': self.get_image_file(),
         }
+
+    @staticmethod
+    def get_product_details_url(product_slug: str) -> str:
+        return reverse(
+            'ecommerce:products-detail',
+            kwargs={'slug': product_slug}
+        )

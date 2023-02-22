@@ -7,7 +7,7 @@ app_name: str = 'ecommerce'
 
 router = DefaultRouter()
 
-router.register(r'products', ProductView, 'product')
+router.register(r'products', ProductView, 'products')
 
 urlpatterns = [
     path('', include(router.urls)),

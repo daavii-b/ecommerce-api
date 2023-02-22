@@ -11,9 +11,9 @@ class TokenPairViewSet(ViewSet):
 
     def create(self, request) -> Response:
         user = authenticate(
-            request, **request.data
+            email=request.data['email'],
+            password=request.data['password']
         )
-
         if user is not None:
             refresh = RefreshToken.for_user(user)
 

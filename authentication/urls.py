@@ -2,6 +2,8 @@ from django.urls import path
 
 from .views import TokenPairViewSet, TokenRefreshViewSet
 
+app_name = "tokens"
+
 urlpatterns = [
     path(r'tokens/', TokenPairViewSet.as_view({
         "post": "create",

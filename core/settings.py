@@ -188,7 +188,7 @@ MEDIA_ROOT: Path = BASE_DIR / 'media/'
 # DEFAULT_BACKEND
 EMAIL_BACKEND: str | None = os.environ.get('EMAIL_BACKEND')
 # Email sender
-DEFAULT_FROM_EMAIL: str = 'britodavi122@gmail.com'
+DEFAULT_FROM_EMAIL: str | None = os.environ.get('DEFAULT_FROM_EMAIL')
 # Client Host for send emails
 EMAIL_HOST: str | None = os.environ.get('EMAIL_HOST')
 # TLS Port

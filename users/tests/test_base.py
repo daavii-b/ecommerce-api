@@ -16,7 +16,7 @@ class UserBaseTestCase(TestCase):
     def __init__(self, *args, **kwargs) -> None:
         self.auth_token = 'Bearer '
         self.url: str = reverse('users:users')
-        self.token_url: str = reverse('token_obtain_pair')
+        self.token_url: str = reverse('tokens:pair-tokens')
         self.content_type = 'application/json'
         self.email_dir = os.path.join(
             settings.BASE_DIR, settings.MEDIA_ROOT, 'emails'
@@ -84,7 +84,7 @@ class UserBaseTestCase(TestCase):
         email: str = 'emailtotest@gmail.com',
         password: str = 'passTotester12'
     ) -> User:
-        return User.objects.create(
+        return User.objects.create_user(  # type: ignore
             first_name=first_name,
             last_name=last_name,
             username=username,
