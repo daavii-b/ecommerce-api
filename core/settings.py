@@ -153,17 +153,17 @@ AUTH_USER_MODEL = 'users.User'
 # REST CONFIGS
 
 REST_FRAMEWORK = {
-    'PAGE_SIZE': os.environ.get('PAGE_SIZE') or 12,
+    # 'PAGE_SIZE': os.environ.get('PAGE_SIZE') or 12,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend'
-    ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination'  # noqa: E501
+    # 'DEFAULT_FILTER_BACKENDS': [
+    #     'django_filters.rest_framework.DjangoFilterBackend'
+    # ],
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination'  # noqa: E501
 }
 
 # JWT CONFIGS

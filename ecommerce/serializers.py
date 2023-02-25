@@ -2,7 +2,14 @@ from collections import defaultdict
 
 from rest_framework import serializers
 
-from .models import Product
+from .models import Category, Product
+
+
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = ['id', 'name', ]
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -16,11 +23,22 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = [
             'id', 'name', 'slug', 'description', 'cover', 'price',
-            'promotional_price', 'stock', 'created_at', 'updated_at'
+            'promotional_price', 'stock', 'category', 'category_name',
+            'created_at', 'updated_at'
         ]
 
     slug = serializers.SlugField(
         read_only=True
+    )
+
+    category = serializers.HyperlinkedRelatedField(
+        view_name='ecommerce:categories-detail', read_only=True,
+        lookup_field='name'
+    )
+
+    category_name = serializers.StringRelatedField(
+        read_only=True,
+        source='category'
     )
 
     def validate_name(self, value) -> str:

@@ -15,7 +15,14 @@ from PIL import Image
 class Category(models.Model):
     id = models.UUIDField('id', default=uuid4, editable=False,
                           primary_key=True, unique=True)
-    name = models.CharField('Category Name', max_length=255)
+    name = models.CharField('Category Name', max_length=120, unique=True)
+
+    def __str__(self) -> str:
+        return str(self.name)
+
+    class Meta:
+        verbose_name: str = 'Category'
+        verbose_name_plural: str = 'Categories'
 
 
 class Product(models.Model):
@@ -41,6 +48,14 @@ class Product(models.Model):
     updated_at = models.DateTimeField('Updated At', auto_now_add=True)
 
     on_sale = models.BooleanField('On sale', default=False)
+
+    category = models.ForeignKey(
+        Category,
+        verbose_name='Category',
+        on_delete=models.DO_NOTHING,
+        default=None,
+        null=True
+    )
 
     def __str__(self) -> str:
         return f'{self.name}'
