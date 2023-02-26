@@ -3,7 +3,7 @@ from typing import Any, Dict, Type
 
 from django.core.cache import cache
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
@@ -12,7 +12,9 @@ from users.models import User
 
 class CartView(ViewSet):
 
-    permission_classes: list[Type[IsAuthenticated]] = [IsAuthenticated,]
+    permission_classes: list[Type[IsAuthenticatedOrReadOnly]] = [
+        IsAuthenticatedOrReadOnly,
+    ]
 
     @staticmethod
     def get_user_object(request) -> User | None:

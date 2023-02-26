@@ -11,6 +11,7 @@ class TokenPairViewSet(ViewSet):
 
     def create(self, request) -> Response:
         user = authenticate(
+            request,
             email=request.data['email'],
             password=request.data['password']
         )
@@ -40,7 +41,8 @@ class TokenRefreshViewSet(ViewSet):
             token: RefreshToken = RefreshToken(refresh_token, verify=True)
 
             return Response({
-                "acesss": str(token.access_token),
+                "access": str(token.access_token),
+                "refresh": str(token)
             }, status=200)
 
         except KeyError:
