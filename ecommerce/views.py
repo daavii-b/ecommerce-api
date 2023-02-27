@@ -3,7 +3,7 @@ import os
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from rest_framework import filters, viewsets
+from rest_framework import filters, status, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -24,7 +24,20 @@ class CategoryView(viewsets.ModelViewSet):
     http_method_names = ['get',]
 
     def list(self, request, *args, **kwargs) -> Response:
-        return super().list(request, *args, **kwargs)
+        serializer: CategorySerializer = CategorySerializer(
+            self.get_queryset(),
+            many=True
+        )
+
+        return Response(
+            {'count': len(serializer.data), 'results': serializer.data, },
+            status=status.HTTP_200_OK
+        )
+
+    def get_queryset(self):
+        queryset = self.queryset.order_by('name')
+
+        return queryset
 
     def retrieve(self, request, *args, **kwargs) -> Response:
         return super().retrieve(request, *args, **kwargs)

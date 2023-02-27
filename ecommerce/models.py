@@ -15,7 +15,7 @@ from PIL import Image
 class Category(models.Model):
     id = models.UUIDField('id', default=uuid4, editable=False,
                           primary_key=True, unique=True)
-    name = models.CharField('Category Name', max_length=120, unique=True)
+    name = models.CharField('Name', max_length=120, unique=True)
 
     def __str__(self) -> str:
         return str(self.name)
