@@ -70,9 +70,12 @@ class Product(models.Model):
         self.slug = slugify(self.name + '-' + str(suffix))
 
         save = super().save(*args, **kwargs)
+
         if self.cover:
             self.cover = self.resize_image(self.cover)
             return save
+
+        return save
 
     @staticmethod
     def resize_image(image: Any, width: int = 300, height: int = 300):

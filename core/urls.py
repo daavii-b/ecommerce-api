@@ -23,7 +23,6 @@ app_name: str = 'api'
 urlpatterns = [
     path('api/', include('ecommerce.urls')),
     path('api/', include('users.urls')),
-    path('api/', include('payments.urls')),
     path('api/', include('cart.urls')),
     path('api/', include('authentication.urls')),
     path('summernote/', include('django_summernote.urls')),

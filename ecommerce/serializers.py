@@ -24,7 +24,7 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'name', 'slug', 'description', 'cover', 'price',
             'promotional_price', 'stock', 'category', 'category_name',
-            'created_at', 'updated_at'
+            'created_at', 'updated_at', 'on_sale'
         ]
 
     slug = serializers.SlugField(
