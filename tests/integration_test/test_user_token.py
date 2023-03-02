@@ -36,7 +36,7 @@ class UserTokenIntegrationTestCase(IntegrationBaseTestCase):
 
         response: HttpResponse = self.client.get(self.user_url)
 
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 401)
 
     def test_if_user_token_is_not_valid_raises_401_unauthorized(self) -> None:
         user = self.make_new_user().json()

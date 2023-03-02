@@ -81,7 +81,7 @@ class UserViewTestCase(UserBaseTestCase):
             content_type=self.content_type
         )
 
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 401)
 
     def test_if_do_not_logged_user_try_to_delete_returns_404(self) -> None:
 
@@ -89,4 +89,4 @@ class UserViewTestCase(UserBaseTestCase):
 
         response: HttpResponse = self.client.delete(self.url)
 
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 401)
