@@ -2,7 +2,6 @@ from typing import Any
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpRequest
-from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.exceptions import AuthenticationFailed, NotFound
@@ -30,22 +29,30 @@ class UserViewSet(ViewSet):
     ]
     coder: Coders = Coders()
 
-    def get_user(self, request) -> User:
+    def get_user_check_permission(self, request) -> User | None:
+        try:
 
-        user: User = get_object_or_404(
-            self.queryset,
-            username=request.user.username
-        )
+            user: User = User.objects.get(username=request.user.username)
+            self.check_object_permissions(request, user)
+            return user
+        except User.DoesNotExist:
+            return None
 
-        self.check_object_permissions(request, user)
-
-        return user
+    @staticmethod
+    def get_user(request) -> User | None:
+        try:
+            return User.objects.get(username=request.user.username)
+        except User.DoesNotExist:
+            return None
 
     def retrieve(self, request) -> Response:
-        user: User = get_object_or_404(
-            self.queryset, username=request.user.username
-        )
+        user: User | None = self.get_user(request)
 
+        if user is None:
+            return Response(
+                'User does not exists.',
+                status=status.HTTP_401_UNAUTHORIZED
+            )
         serializer: UserSerializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -64,7 +71,13 @@ class UserViewSet(ViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def partial_update(self, request) -> Response:
-        user: User = self.get_user(request)
+        user: User | None = self.get_user_check_permission(request)
+
+        if user is None:
+            return Response(
+                'User does not exists.',
+                status=status.HTTP_401_UNAUTHORIZED
+            )
 
         serializer: UserSerializer = UserSerializer(
             partial=True,
@@ -80,7 +93,13 @@ class UserViewSet(ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def update(self, request) -> Response:
-        user: User = self.get_user(request)
+        user: User | None = self.get_user_check_permission(request)
+
+        if user is None:
+            return Response(
+                'User does not exists.',
+                status=status.HTTP_401_UNAUTHORIZED
+            )
 
         serializer: UserSerializer = UserSerializer(
             data=request.data,
@@ -95,7 +114,13 @@ class UserViewSet(ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def destroy(self, request) -> Response:
-        user: User = self.get_user(request)
+        user: User | None = self.get_user_check_permission(request)
+
+        if user is None:
+            return Response(
+                'User does not exists.',
+                status=status.HTTP_401_UNAUTHORIZED
+            )
 
         user.delete()
 
