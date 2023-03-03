@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import os
 import string
+from collections import defaultdict
 from random import SystemRandom
 from typing import Any, List, Tuple
 from uuid import uuid4
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.text import slugify
 from PIL import Image
@@ -73,7 +75,6 @@ class Product(models.Model):
 
         if self.cover:
             self.cover = self.resize_image(self.cover)
-            return save
 
         return save
 
@@ -106,7 +107,23 @@ class Product(models.Model):
         product.save()
 
     def clean(self, *args, **kwargs) -> None:
+        clean = super().clean(*args, **kwargs)
+
+        __errors = defaultdict(list)
+
+        if getattr(self, 'price') < 0:
+            __errors['price'].append(
+                'Price must be greater than zero'
+            )
+
+        if getattr(self, 'promotional_price') < 0:
+            __errors['promotional_price'].append(
+                'Promotional price must be greater than zero'
+            )
 
         self.stockless(self) if not getattr(self, 'stock') else ...
 
-        return super().clean(*args, **kwargs)
+        if __errors:
+            raise ValidationError(__errors)
+
+        return clean
