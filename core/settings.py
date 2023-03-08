@@ -35,8 +35,8 @@ SECRET_KEY: str = os.environ.get("DJANGO_SECRET_KEY", "INSECURE")
 DEBUG: bool = True if os.environ.get('DEBUG') == '1' else False
 
 ALLOWED_HOSTS: List = [
-    '192.168.0.20',
-    '127.0.0.1'
+    'localhost',
+    '192.168.0.20'
 ]
 
 # Application definition
@@ -221,3 +221,6 @@ CACHES = {
 
 SESSION_ENGINE: str = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS: str = "default"
+
+
+SITE_URL: str = os.environ.get('BASE_URL', 'http://localhost:3000')
