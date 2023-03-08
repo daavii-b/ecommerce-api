@@ -46,8 +46,8 @@ class Product(models.Model):
     price = models.FloatField('Price', default=0)
     promotional_price = models.FloatField('Promotional Price', default=0)
 
-    created_at = models.DateTimeField('Created At', auto_now=True)
-    updated_at = models.DateTimeField('Updated At', auto_now_add=True)
+    created_at = models.DateTimeField('Created At', auto_now_add=True)
+    updated_at = models.DateTimeField('Updated At', auto_now=True)
 
     on_sale = models.BooleanField('On sale', default=False)
 
