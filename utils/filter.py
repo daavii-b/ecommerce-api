@@ -1,15 +1,35 @@
 
-from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Q
+from django_filters import rest_framework as filters
+
+from ecommerce.models import Product
 
 
-class CategoryFilter(DjangoFilterBackend):
+class ProductFilter(filters.FilterSet):
+    min_price = filters.NumberFilter(field_name='price', lookup_expr='gte')
+    max_price = filters.NumberFilter(field_name='price', lookup_expr='lte', )
 
-    def filter_queryset(self, request, queryset, view):
-        category = request.query_params.get('category', None)
+    min_promotional_price = filters.NumberFilter(
+        field_name='promotional_price',
+        lookup_expr='gte',
+    )
+    max_promotional_price = filters.NumberFilter(
+        field_name='promotional_price',
+        method='filter_max_promotional_price'
+    )
 
-        if category:
-            queryset = queryset.filter(
-                category__name__icontains=category
-            )
+    category = filters.CharFilter(
+        field_name='category__name',
+        lookup_expr='iexact'
+    )
 
-        return super().filter_queryset(request, queryset, view)
+    range = filters.RangeFilter()
+
+    def filter_max_promotional_price(self, queryset, name, value) -> None:
+        return queryset.filter(
+            Q(promotional_price__gt=0) & Q(promotional_price__lte=value)
+        )
+
+    class Meta:
+        model = Product
+        fields = ['category', 'price', 'promotional_price']
