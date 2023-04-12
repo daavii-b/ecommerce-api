@@ -17,6 +17,8 @@ from typing import List
 
 from dotenv import load_dotenv
 
+from utils.csv import get_values_from_csv
+
 load_dotenv()
 
 APPEND_SLASH = True
@@ -34,10 +36,8 @@ SECRET_KEY: str = os.environ.get("DJANGO_SECRET_KEY", "INSECURE")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG: bool = True if os.environ.get('DEBUG') == '1' else False
 
-ALLOWED_HOSTS: List = [
-    'localhost',
-    '192.168.0.20'
-]
+ALLOWED_HOSTS: List = get_values_from_csv(
+    os.environ.get('ALLOWED_HOSTS', 'localhost, 127.0.0.1'))
 
 # Application definition
 INSTALLED_APPS: list[str] = [
@@ -55,7 +55,6 @@ INSTALLED_APPS: list[str] = [
     'users',
     'ecommerce',
     'payments',
-    'cart',
 ]
 
 MIDDLEWARE: list[str] = [
@@ -95,8 +94,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.environ.get('DATABASE_ENGINE'),
+        'NAME': os.environ.get('DATABASE_NAME'),
+        'USER': os.environ.get('DATABASE_USER'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
+        'HOST': os.environ.get('DATABASE_HOST'),
+        'PORT': os.environ.get('DATABASE_PORT'),
     }
 }
 
@@ -142,10 +145,9 @@ STATIC_ROOT = 'static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ORIGIN_WHITELIST: list[str] = [
-    'http://localhost:3000',
-    'http://192.168.0.20:3000',
-]
+CORS_ORIGIN_WHITELIST: list[str] = get_values_from_csv(
+    os.environ.get('CORS_ORIGIN_WHITELIST', 'http://localhost')
+)
 
 
 AUTH_USER_MODEL = 'users.User'
