@@ -4,7 +4,6 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpRequest
 from rest_framework import status
 from rest_framework.decorators import api_view, renderer_classes
-from rest_framework.exceptions import AuthenticationFailed, NotFound
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
@@ -29,19 +28,25 @@ class UserViewSet(ViewSet):
     ]
     coder: Coders = Coders()
 
-    def get_user_check_permission(self, request) -> User | None:
-        try:
-
-            user: User = User.objects.get(username=request.user.username)
-            self.check_object_permissions(request, user)
-            return user
-        except User.DoesNotExist:
-            return None
-
     @staticmethod
     def get_user(request) -> User | None:
         try:
             return User.objects.get(username=request.user.username)
+        except User.DoesNotExist:
+            return None
+
+    def get_user_check_permission(self, request) -> User | None:
+        try:
+
+            user: User | None = self.get_user(request)
+
+            if user is None:
+                return None
+
+            self.check_object_permissions(request, user)
+
+            return user
+
         except User.DoesNotExist:
             return None
 
@@ -50,7 +55,7 @@ class UserViewSet(ViewSet):
 
         if user is None:
             return Response(
-                'User does not exists.',
+                'User does not exists',
                 status=status.HTTP_401_UNAUTHORIZED
             )
         serializer: UserSerializer = UserSerializer(user)
@@ -97,7 +102,7 @@ class UserViewSet(ViewSet):
 
         if user is None:
             return Response(
-                'User does not exists.',
+                'User does not exists',
                 status=status.HTTP_401_UNAUTHORIZED
             )
 
@@ -118,7 +123,7 @@ class UserViewSet(ViewSet):
 
         if user is None:
             return Response(
-                'User does not exists.',
+                'User does not exists',
                 status=status.HTTP_401_UNAUTHORIZED
             )
 
@@ -140,15 +145,19 @@ def confirm_email(request: HttpRequest, uuid: str, token: str) -> Response:
 
             return Response(status.HTTP_200_OK)
         else:
-            raise AuthenticationFailed(
-                detail='Your link to confirm your email address is invalid.',
-                code=status.HTTP_401_UNAUTHORIZED,
+            return Response(
+                {'errors': [
+                    'Your link to confirm your email address is invalid.',
+                ]},
+                status=status.HTTP_400_BAD_REQUEST
             )
 
     except User.DoesNotExist:
-        raise NotFound(
-            'User does not exist',
-            code=status.HTTP_404_NOT_FOUND
+        return Response(
+            {'errors': [
+                'Email address does not exist',
+            ]},
+            status=status.HTTP_404_NOT_FOUND
         )
 
 

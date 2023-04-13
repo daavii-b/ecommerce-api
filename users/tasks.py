@@ -11,17 +11,23 @@ from .services.email import UserEmailService
 logger = get_task_logger(__name__)
 
 
-def get_user_instance(user_email) -> User:
-    return User.objects.get(email__exact=user_email)
+def get_user_instance(user_email) -> User | None:
+    try:
+        return User.objects.get(email__exact=user_email)
+    except User.DoesNotExist:
+        return None
 
 
-def get_email_service(domain: str, user: User) -> UserEmailService:
-    html_message: str = renders.email_render(domain, user)
-    return UserEmailService(
-        'This email is sent through celery and rabbitMQ.',
-        [user.email],
-        html_message=html_message,
-    )
+def get_email_service(
+        domain: str, user: User | None) -> UserEmailService | None:
+    if user:
+        html_message: str = renders.email_render(domain, user)
+        return UserEmailService(
+            subject=f'Welcome to Ecommerce Project {user.username}!',
+            recipient_list=[user.email],
+            html_message=html_message,
+        )
+    return None
 
 
 @shared_task(name="users.send_email_task")
@@ -30,6 +36,7 @@ def send_email_task(domain, user_email) -> None:
         domain, get_user_instance(user_email)
     )
 
-    logger.info('Sent confirmation email')
+    if email is not None:
+        logger.info('Sent confirmation email')
 
-    email.send_email()
+        email.send_email()

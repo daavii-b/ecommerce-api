@@ -9,12 +9,12 @@ from rest_framework.response import Response
 
 class Coders:
 
-    def encode(self, data) -> str:
-        return urlsafe_base64_encode(force_bytes(data))
+    def encode(self, user_id) -> str:
+        return urlsafe_base64_encode(force_bytes(user_id))
 
-    def decode(self, data) -> Any | None:
+    def decode(self, user_id) -> Any | None:
         try:
-            decoded_data = force_text(urlsafe_base64_decode(data))
+            decoded_data = force_text(urlsafe_base64_decode(user_id))
 
             return decoded_data
         except DjangoUnicodeDecodeError:

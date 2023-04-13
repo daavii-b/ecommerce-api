@@ -16,12 +16,12 @@ class UserEmailService(IEmailService):
     ) -> None:
         self.__from_email = settings.DEFAULT_FROM_EMAIL
 
-        self._subject = subject
-        self._message = message
-        self._recipient_list = recipient_list
-        self._fail_silently = fail_silently
+        self.subject = subject
+        self.message = message
+        self.recipient_list = recipient_list
+        self.fail_silently = fail_silently
 
-        self._html_message = html_message
+        self.html_message = html_message
 
         self._connection: Any = connection if connection is not None \
             else get_connection(
