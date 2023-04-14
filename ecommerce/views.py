@@ -2,8 +2,8 @@
 import os
 from collections import OrderedDict
 
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+# from django.utils.decorators import method_decorator
+# from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, status, viewsets
 from rest_framework.pagination import PageNumberPagination
@@ -23,7 +23,7 @@ class CategoryView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, ]
 
     lookup_field: str = 'name'
-    http_method_names = ['get',]
+    http_method_names = ['get', ]
 
     def list(self, request, *args, **kwargs) -> Response:
         serializer: CategorySerializer = CategorySerializer(
@@ -87,11 +87,11 @@ class ProductView(viewsets.ModelViewSet):
     filterset_class = ProductFilter
     # filterset_fields = ['category__name', 'price', 'promotional_price']
 
-    @method_decorator(cache_page(60*10, key_prefix='home_page'))
+    # @method_decorator(cache_page(60*10, key_prefix='home_page'))
     def list(self, request, *args, **kwargs) -> Response:
         return super().list(request, *args, **kwargs)
 
-    @method_decorator(cache_page(60*10, key_prefix='detail_product'))
+    # @method_decorator(cache_page(60*10, key_prefix='detail_product'))
     def retrieve(self, request, *args, **kwargs) -> Response:
         return super().retrieve(request, *args, **kwargs)
 
