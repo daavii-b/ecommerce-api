@@ -53,7 +53,7 @@ class UserTokenIntegrationTestCase(IntegrationBaseTestCase):
         response: HttpResponse = self.client.get(
             confirm_email_url, follow=True
         )
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 400)
         self.assertIn(expected_error_message, response.content.decode('utf-8'))
 
     def test_if_user_can_get_your_data_with_your_access_token(self) -> None:  # noqa: E501

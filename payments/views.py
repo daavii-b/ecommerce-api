@@ -7,7 +7,8 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 
 # This is your test secret API key.
-stripe.api_key = 'sk_test_51MRQc9ILB47AslaJsNm0Xm7TCKCr9hnaNpMFRD34HwlXOAGjL9wmuEOkxgdbSlTT9p4brD86sV7Nb3etGpVAXy0o00O9DRuMcJ'  # noqa: E501
+stripe.api_key = 'sk_test_51MRQc9ILB47AslaJsNm0Xm7TCKCr9hnaNpMFRD34HwlXOAGj' \
+    'andL9wmuEOkxgdbSlTT9p4brD86sV7Nb3etGpVAXy0o00O9DRuMcJ'
 
 
 class CheckoutSessionView(CreateAPIView):
@@ -26,7 +27,7 @@ class CheckoutSessionView(CreateAPIView):
                     'currency': 'brl',
                     'product_data': {
                         'name': item['product']['name'],
-                        'images': [item['product']['cover'],],
+                        'images': [item['product']['cover'], ],
                         'metadata': {
                             'product_id': item['product']['id'],
                             'description': item['product']['description'],
@@ -42,7 +43,7 @@ class CheckoutSessionView(CreateAPIView):
 
         try:
             checkout_session = stripe.checkout.Session.create(
-                payment_method_types=['card',],
+                payment_method_types=['card', ],
                 customer_email="useremail1@gmail.com",
                 submit_type="pay",
                 line_items=self.get_products_list(request),

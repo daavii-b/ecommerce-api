@@ -1,6 +1,8 @@
 from rest_framework.permissions import BasePermission
 
-NEW_USER_SAFE_METHODS = ('POST', 'OPTIONS', 'HEAD')
+NEW_USER_SAFE_METHODS = (
+    'POST', 'OPTIONS', 'HEAD'
+)
 
 
 class IsOwner(BasePermission):

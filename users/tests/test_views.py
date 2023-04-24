@@ -63,7 +63,7 @@ class UserViewTestCase(UserBaseTestCase):
             self.encode_data(uuid4()), user_token
         ))
 
-        expected_error_message: str = 'User does not exist'
+        expected_error_message: str = 'Email address does not exist'
 
         response: HttpResponse = self.client.get(
             confirm_email_url, follow=True

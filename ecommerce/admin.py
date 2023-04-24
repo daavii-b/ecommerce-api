@@ -22,11 +22,15 @@ class ProductAdmin(SummernoteModelAdmin):
         'price', 'promotional_price', 'created_at'
     ]
     list_display_links = ['name']
-    list_editable = ['stock', 'on_sale', 'price', 'promotional_price']
+    list_editable = [
+        'stock', 'on_sale', 'price', 'promotional_price'
+    ]
     list_per_page = 10
     list_max_show_all = 10
 
-    search_fields = ['name', 'stock', 'on_sale', 'created_at', 'updated_at']
+    search_fields = [
+        'name', 'stock', 'on_sale', 'created_at', 'updated_at'
+    ]
     prepopulated_fields = {
         'slug': ('name',)
     }

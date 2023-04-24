@@ -75,8 +75,12 @@ class ProductPagination(PageNumberPagination):
 class ProductView(viewsets.ModelViewSet):
 
     serializer_class = ProductSerializer
-    queryset = Product.objects.filter(on_sale=True).select_related('category')
-    permission_classes = [IsAuthenticatedOrReadOnly, ]
+    queryset = Product.objects.filter(
+        on_sale=True
+    ).select_related('category')
+    permission_classes = [
+        IsAuthenticatedOrReadOnly,
+    ]
     pagination_class = ProductPagination
     lookup_field: str = 'slug'
     http_method_names = ['get', 'post']
