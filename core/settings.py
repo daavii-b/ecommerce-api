@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from datetime import timedelta
 from pathlib import Path
-from typing import List
 
 from dotenv import load_dotenv
 
@@ -31,16 +30,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY: str = os.environ.get("DJANGO_SECRET_KEY", "INSECURE")
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "INSECURE")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG: bool = True if os.environ.get('DEBUG') == '1' else False
+DEBUG = True if os.environ.get('DEBUG') == '1' else False
 
-ALLOWED_HOSTS: List = get_values_from_csv(
+ALLOWED_HOSTS = get_values_from_csv(
     os.environ.get('ALLOWED_HOSTS', 'localhost, 127.0.0.1'))
 
 # Application definition
-INSTALLED_APPS: list[str] = [
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -57,7 +56,7 @@ INSTALLED_APPS: list[str] = [
     'payments',
 ]
 
-MIDDLEWARE: list[str] = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -145,7 +144,7 @@ STATIC_ROOT = 'static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ORIGIN_WHITELIST: list[str] = get_values_from_csv(
+CORS_ORIGIN_WHITELIST = get_values_from_csv(
     os.environ.get('CORS_ORIGIN_WHITELIST', 'http://localhost')
 )
 
@@ -182,25 +181,25 @@ SIMPLE_JWT = {
 
 # Media
 
-MEDIA_URL: str = 'media/'
-MEDIA_ROOT: Path = BASE_DIR / 'media/'
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media/'
 
 # SMTP
 
 # DEFAULT_BACKEND
-EMAIL_BACKEND: str | None = os.environ.get('EMAIL_BACKEND')
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
 # Email sender
-DEFAULT_FROM_EMAIL: str | None = os.environ.get('DEFAULT_FROM_EMAIL')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 # Client Host for send emails
-EMAIL_HOST: str | None = os.environ.get('EMAIL_HOST')
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
 # TLS Port
-EMAIL_PORT: str | None = os.environ.get('EMAIL_PORT')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
 # Use TLS
-EMAIL_USE_TLS: str | None = os.environ.get('EMAIL_USE_TLS')
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS')
 # Email to send email
-EMAIL_HOST_USER: str | None = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 # Email Password
-EMAIL_HOST_PASSWORD: str | None = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 
 # Default Password Reset Timeout
@@ -221,8 +220,8 @@ CACHES = {
     }
 }
 
-SESSION_ENGINE: str = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS: str = "default"
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
 
 
-SITE_URL: str = os.environ.get('BASE_URL', 'http://localhost:3000')
+SITE_URL = os.environ.get('BASE_URL', 'http://localhost:3000')
