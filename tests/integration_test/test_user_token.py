@@ -1,3 +1,5 @@
+from typing import Union
+
 from django.http import HttpResponse
 from django.urls import reverse
 
@@ -40,7 +42,7 @@ class UserTokenIntegrationTestCase(IntegrationBaseTestCase):
 
     def test_if_user_token_is_not_valid_raises_401_unauthorized(self) -> None:
         user = self.make_new_user().json()
-        user_object: User | None = self.get_user_object(user['email'])
+        user_object: Union[User, None] = self.get_user_object(user['email'])
         other_user_object: User = self.make_user_object()
         user_token: str = token_email_generator.make_token(other_user_object)
 

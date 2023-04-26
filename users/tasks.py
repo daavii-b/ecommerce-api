@@ -1,5 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 
+from typing import Union
+
 from celery import shared_task
 from celery.utils.log import get_task_logger
 
@@ -11,7 +13,7 @@ from .services.email import UserEmailService
 logger = get_task_logger(__name__)
 
 
-def get_user_instance(user_email) -> User | None:
+def get_user_instance(user_email) -> Union[User, None]:
     try:
         return User.objects.get(email__exact=user_email)
     except User.DoesNotExist:
@@ -19,7 +21,7 @@ def get_user_instance(user_email) -> User | None:
 
 
 def get_email_service(
-        domain: str, user: User | None) -> UserEmailService | None:
+        domain: str, user: Union[User, None]) -> Union[UserEmailService, None]:
     if user:
         html_message: str = renders.email_render(domain, user)
         return UserEmailService(

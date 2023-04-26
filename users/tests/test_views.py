@@ -1,3 +1,4 @@
+from typing import Union
 from uuid import uuid4
 
 from django.http import HttpResponse
@@ -55,7 +56,7 @@ class UserViewTestCase(UserBaseTestCase):
 
     def test_if_user_do_not_exists_raises_not_found(self) -> None:
         user: dict = self.make_new_user().json()
-        user_object: User | None = self.get_user_object(user['email'])
+        user_object: Union[User, None] = self.get_user_object(user['email'])
         user_token: str = token_email_generator.make_token(
             user_object  # type: ignore
         )

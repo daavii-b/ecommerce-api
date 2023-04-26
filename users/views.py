@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, List, Union
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpRequest
@@ -23,22 +23,22 @@ class UserViewSet(ViewSet):
     queryset = User.objects.all()
     lookup_field: str = 'username'
     permission_classes = (NewUser, IsOwner,)
-    http_method_names: list[str] = [
+    http_method_names: List[str] = [
         "get", "post", "put", "patch", "delete", "options"
     ]
     coder: Coders = Coders()
 
     @staticmethod
-    def get_user(request) -> User | None:
+    def get_user(request) -> Union[User, None]:
         try:
             return User.objects.get(username=request.user.username)
         except User.DoesNotExist:
             return None
 
-    def get_user_check_permission(self, request) -> User | None:
+    def get_user_check_permission(self, request) -> Union[User, None]:
         try:
 
-            user: User | None = self.get_user(request)
+            user: Union[User, None] = self.get_user(request)
 
             if user is None:
                 return None
@@ -51,7 +51,7 @@ class UserViewSet(ViewSet):
             return None
 
     def retrieve(self, request) -> Response:
-        user: User | None = self.get_user(request)
+        user: Union[User, None] = self.get_user(request)
 
         if user is None:
             return Response(
@@ -76,7 +76,7 @@ class UserViewSet(ViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def partial_update(self, request) -> Response:
-        user: User | None = self.get_user_check_permission(request)
+        user: Union[User, None] = self.get_user_check_permission(request)
 
         if user is None:
             return Response(
@@ -98,7 +98,7 @@ class UserViewSet(ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def update(self, request) -> Response:
-        user: User | None = self.get_user_check_permission(request)
+        user: Union[User, None] = self.get_user_check_permission(request)
 
         if user is None:
             return Response(
@@ -119,7 +119,7 @@ class UserViewSet(ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def destroy(self, request) -> Response:
-        user: User | None = self.get_user_check_permission(request)
+        user: Union[User, None] = self.get_user_check_permission(request)
 
         if user is None:
             return Response(

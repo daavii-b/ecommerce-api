@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Union
 
 from django.utils.encoding import DjangoUnicodeDecodeError, force_bytes
 from django.utils.encoding import force_str as force_text
@@ -12,7 +12,7 @@ class Coders:
     def encode(self, user_id) -> str:
         return urlsafe_base64_encode(force_bytes(user_id))
 
-    def decode(self, user_id) -> Any | None:
+    def decode(self, user_id) -> Union[Any, Response]:
         try:
             decoded_data = force_text(urlsafe_base64_decode(user_id))
 

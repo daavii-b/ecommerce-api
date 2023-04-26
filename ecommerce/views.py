@@ -1,6 +1,7 @@
 
 import os
 from collections import OrderedDict
+from typing import List
 
 # from django.utils.decorators import method_decorator
 # from django.views.decorators.cache import cache_page
@@ -83,11 +84,11 @@ class ProductView(viewsets.ModelViewSet):
     ]
     pagination_class = ProductPagination
     lookup_field: str = 'slug'
-    http_method_names = ['get', 'post']
+    http_method_names: List[str] = ['get', 'post']
 
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
 
-    search_fields: list[str] = ["$name", "$price", "$promotional_price"]
+    search_fields: List[str] = ["$name", "$price", "$promotional_price"]
     filterset_class = ProductFilter
     # filterset_fields = ['category__name', 'price', 'promotional_price']
 

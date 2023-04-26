@@ -1,3 +1,5 @@
+from typing import List
+
 from django.contrib.auth import authenticate
 from rest_framework import status
 from rest_framework.response import Response
@@ -7,7 +9,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 class TokenPairViewSet(ViewSet):
 
-    http_method_names: list[str] = ['post']
+    http_method_names: List[str] = ['post']
 
     def create(self, request) -> Response:
         user = authenticate(
@@ -32,7 +34,7 @@ class TokenPairViewSet(ViewSet):
 
 class TokenRefreshViewSet(ViewSet):
 
-    http_method_names: list[str] = ['post']
+    http_method_names: List[str] = ['post']
 
     def create(self, request) -> Response:
         try:

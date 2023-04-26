@@ -1,5 +1,5 @@
 import os
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Union
 
 from django.conf import settings
 from django.http import HttpResponse
@@ -40,7 +40,7 @@ class UserBaseTestCase(TestCase):
             follow=True
         )
 
-    def get_confirm_email_url(self, user: User | None) -> str:
+    def get_confirm_email_url(self, user: Union[User, None]) -> str:
         return reverse(
             'users:confirm_email',
             args=self.get_encoded_data(user)
@@ -93,7 +93,7 @@ class UserBaseTestCase(TestCase):
         )
 
     @staticmethod
-    def get_user_object(email: str) -> User | None:
+    def get_user_object(email: str) -> Union[User, None]:
         try:
             return User.objects.get(email=email)
         except User.DoesNotExist:

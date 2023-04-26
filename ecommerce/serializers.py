@@ -1,4 +1,5 @@
 from collections import defaultdict
+from typing import List
 
 from rest_framework import serializers
 
@@ -15,7 +16,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs) -> None:
-        self._errors: defaultdict[str, list] = defaultdict(list)
+        self._errors: defaultdict[str, List] = defaultdict(list)
         self._field: str = ''
         return super().__init__(*args, **kwargs)
 
