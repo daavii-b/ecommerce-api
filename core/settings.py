@@ -205,8 +205,7 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 # Default Password Reset Timeout
 
-PASSWORD_RESET_TIMEOUT: float = 60 * 30
-
+PASSWORD_RESET_TIMEOUT: float = timedelta(hours=5)
 # CACHE
 
 # CACHES = {
